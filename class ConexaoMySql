@@ -1,0 +1,22 @@
+package modelo.conexao;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class ConexaoMySql implements Conexao{
+
+    private final String USUARIO = "root";
+    private final String SENHA = "Pedro1379";
+    private final String URL = "jdbc:mysql://localhost/gestao_estoque?useTimezone=true&serverTimezone=America/Minas_Gerais";
+    private Connection conectar;
+
+    //Implementando método da interface "Conexao"
+    @Override
+    public Connection obterConexao() throws SQLException {
+        if (conectar == null){
+            conectar = DriverManager.getConnection(URL, USUARIO, SENHA);
+        }
+        return conectar;
+    }
+}
