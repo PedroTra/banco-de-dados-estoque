@@ -1,0 +1,47 @@
+package modelo.dado;
+
+import modelo.dominio.Perfil;
+import modelo.dominio.Usuario;
+import view.modelo.LoginDto;
+
+import javax.swing.*;
+
+public class AutenticacaoDado {
+
+    private final UsuarioDado usuarioDado;
+    public AutenticacaoDado() {
+        usuarioDado = new UsuarioDado();
+    }
+
+    public boolean temPermissao(Usuario usuario){
+        try {
+            permissao(usuario);
+            return  true;
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Usuário sem permissão", 0);
+            return false;
+        }
+    }
+
+    private void permissao(Usuario usuario){
+        if (!Perfil.ADMIN.equals(usuario.getPerfil())){
+            throw new NegocioException("Sem permissão para realizar essa ação");
+        }
+    }
+    public Usuario login(LoginDto login){
+        Usuario usuario = usuarioDado.buscarUsuarioPeloUsuario(login.getUsuario());
+
+        if (usuario == null || usuario.isEstado())
+            return null;
+
+        if (usuario.isEstado() && validaSenha(usuario.getSenha(), login.getSenha())){
+            return usuario;
+        }
+        return null;
+    }
+
+    private boolean validaSenha(String senhaUsuario, String senhaLogin){
+        return senhaUsuario.equals(senhaLogin);
+    }
+
+}
