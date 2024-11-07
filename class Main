@@ -1,0 +1,40 @@
+import modelo.conexao.Conexao;
+import modelo.conexao.ConexaoMySql;
+import modelo.dominio.Categoria;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import modelo.dado.UsuarioDado;
+import modelo.dominio.Usuario;
+import modelo.dominio.Perfil;
+
+public class Main {
+
+    public static void main(String[] args) throws SQLException {
+
+        String sql = "Select * from categoria";
+
+        Conexao conexao = new ConexaoMySql();
+
+        Categoria categoria = new Categoria(1L, "Bebida Java", "Inserção codigo");
+
+        String inserirSql = "INSERT INTO categoria(nome, descricao) VALUES(?, ?)";
+
+        PreparedStatement preparedStatement = conexao.obterConexao().prepareStatement(inserirSql);
+
+        preparedStatement.setString(1, categoria.getNome());
+        preparedStatement.setString(2, categoria.getDescricao());
+
+        int resultadoDoCadastro = preparedStatement.executeUpdate();
+
+        System.out.println(resultadoDoCadastro);
+
+        //Realixar consulta
+        ResultSet result = conexao.obterConexao().prepareStatement(sql).executeQuery();
+
+        while (result.next()){
+            System.out.println(result.getString("nome"));
+        }
+    }
+}
